@@ -1,0 +1,30 @@
+-- Obtenemos el servicio de jugadores
+local players = game:GetService("Players")
+
+-- Función para resaltar a un jugador
+local function highlightPlayer(player)
+    -- Creamos una nueva instancia de Highlight
+    local highlight = Instance.new("Highlight")
+    
+    -- Configuramos las propiedades del Highlight
+    highlight.FillColor = Color3.fromRGB(255, 0, 0) -- Color de relleno: rojo
+    highlight.OutlineColor = Color3.fromRGB(0, 0, 255) -- Color del contorno: azul
+    
+    -- Nos aseguramos de que el Character del jugador exista antes de asignar
+    if player.Character then
+        highlight.Parent = player.Character -- Asignamos el Highlight al personaje del jugador
+    end
+end
+
+-- Iteramos sobre todos los jugadores actuales en el juego
+for _, player in ipairs(players:GetPlayers()) do
+    highlightPlayer(player) -- Aplicamos la función de resaltar a cada jugador
+end
+
+-- Escuchamos por nuevos jugadores que se unan al juego
+players.PlayerAdded:Connect(function(player)
+    -- Cuando un jugador se una, esperamos a que su personaje esté disponible
+    player.CharacterAdded:Connect(function()
+        highlightPlayer(player) -- Aplicamos el Highlight al nuevo personaje
+    end)
+end)
